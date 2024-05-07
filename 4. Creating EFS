@@ -1,0 +1,39 @@
+In the search bar type EFS
+Click EFS
+Create File System
+Name : Dev-EFS
+VPC : select your VPC
+Then Click Create file System
+
+NEXT ***CREATING A KEYPAIR***
+
+
+NEXT  *** LAUNCH EC2 INSTANCE ***
+
+We are going to launch ec2 instance in the public subnet to install wordpress.
+
+In the search bar type EC2
+
+Click EC2 and Launch instance
+Name : 
+quick start : Amazon Linux
+Amazon Machine Image (AMI) : Amazon Linux 2023 AMI
+Instance type : t2micro
+Key pair : select your KEYPAIR
+Network settings 
+VPC : select your VPC
+Subnet : public subnet AZ1
+Auto-assign public IP : Enable
+Firewall (security groups) ----  Select existing security group
+Common security groups :SSH security group, ALB security group and Webserver security group
+Then create launch instance
+
+NEXT ***SSH INTO THE EC2 INSTANCE ***
+
+Select the instance we just launch and copy the Public IPv4 address
+
+Next open powershel and paste this command ssh -i "cloud-key.pem" ec2-user@54.236.34.172
+
+now we have ssh into the server [ec2-user@ip-10-0-0-101 ~]$
+
+

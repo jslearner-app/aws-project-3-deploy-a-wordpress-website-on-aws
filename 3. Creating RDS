@@ -1,0 +1,40 @@
+In the search box type RDS
+select RDS
+Before we create a RDS in the private data subnet, we first need to create a Subnet group to specified which subnet we want to create our RDS Database
+
+***SUBNET GROUPS CREATION***
+
+Click Subnet Group
+Click Create DB Subnet Group
+Name : database subnets
+Description : database subnets
+VPC : Select your VPC
+Add subnets
+Availability Zones : us-east-1a and us-east-1b
+Subnets : private data subnet az1 cidr block and private data subnet az2 cidr block
+Then click Create.
+
+***RDS DATABASE CREATION***
+
+Click Database
+Click Create Database
+Choose a database creation method : Standard create
+Engine options : MySQL
+Templates : Dev/Test
+Availability and durability : Single DB instance
+DB instance identifier : dev-rds-db
+Master username : admin
+Credentials management : Self managed
+Master password : give password
+Instance configuration : toggle Include previous generation classes
+                        Burstable classes (includes t classes)
+Virtual private cloud (VPC)  : select your VPC
+Public access : NO
+VPC security group (firewall) ----  Choose existing
+Existing VPC security groups : select database security group
+Availability Zone : us-east-1b
+Database authentication: Password authentication
+Additional configuration
+Initial database name : applicationdb
+Then Click create Database
+

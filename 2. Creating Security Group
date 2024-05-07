@@ -1,0 +1,36 @@
+***CREATING 4 SECURITY GROUPS***
+Click Security group 
+Create security group
+Security group name : ALB Security group
+port 80 AND port 443
+source : 0.0.0.0/0
+CLICK CREATE SECURITY GROUP
+
+Click Security group 
+Create security group
+Security group name : SSH Security group
+port 22
+source : MY IP ADDRESS
+CLICK CREATE SECURITY GROUP
+
+Click Security group 
+Create security group
+Security group name : Webserver Security group
+port 80 AND port 443   source : ALB Security group
+port 22                source : SSH Security group
+CLICK CREATE SECURITY GROUP
+
+Click Security group 
+Create security group
+Security group name : Database Security group
+port 3306   source : Webserver Security group
+CLICK CREATE SECURITY GROUP
+
+Click Security group 
+Create security group
+Security group name : EFS Security group
+port 2049   source : Webserver Security group
+port 22                source : SSH Security group
+CLICK CREATE SECURITY GROUP AND EDIT THE SECURITY GROUP TO ADD 
+PORT 2049 NFS   SOURCE : EFS Security group
+AND SAVE 

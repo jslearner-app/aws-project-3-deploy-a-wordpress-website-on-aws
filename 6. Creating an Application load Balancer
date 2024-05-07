@@ -1,0 +1,125 @@
+***CREATING APPLICATION LOAD BALANCER AND TARGET GROUP***
+
+*** EC2 INSTANCE IN EACH PRIVATE APP SUBNET***
+First we need to create EC2 instance in each of Private App Subnet.
+In the Search bar type EC2 click EC2.
+
+Click launch instance
+Name: Webserver AZ1
+Quick start : Amazon Linux
+Amazon Machine Image (AMI) : Amazon Linux 2023 AMI 
+Instance type : t2.micro
+VPC : select your VPC
+Key pair: select your keypair
+Subnet : Private App Subnet AZ1
+Select existing security group : Webserver Security group
+
+***Click Advanced details and scrol down to USER DATA***
+PASTE THIS COMMAND IN IT.
+/*  #!/bin/bash
+yum update -y
+sudo yum install -y httpd httpd-tools mod_ssl
+sudo systemctl enable httpd 
+sudo systemctl start httpd
+sudo amazon-linux-extras enable php7.4
+sudo yum clean metadata
+sudo yum install php php-common php-pear -y
+sudo yum install php-{cgi,curl,mbstring,gd,mysqlnd,gettext,json,xml,fpm,intl,zip} -y
+sudo rpm -Uvh https://dev.mysql.com/get/mysql57-community-release-el7-11.noarch.rpm
+sudo rpm --import https://repo.mysql.com/RPM-GPG-KEY-mysql-2022
+sudo yum install mysql-community-server -y
+sudo systemctl enable mysqld
+sudo systemctl start mysqld
+echo "fs-0760d22a2b943eaa8.efs.us-east-1.amazonaws.com:/ /var/www/html nfs4 nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2 0 0" >> /etc/fstab
+mount -a
+chown apache:apache -R /var/www/html
+sudo service httpd restart
+*/
+
+Then click Launch Instance.
+
+***LAUNCH ANOTHER EC2 INSTANCE IN PRIVATE APP SUBNET AZ2***
+
+Click launch instance
+Name: Webserver AZ2
+Quick start : Amazon Linux
+Amazon Machine Image (AMI) : Amazon Linux 2023 AMI 
+Instance type : t2.micro
+VPC : select your VPC
+Key pair: select your keypair
+Subnet : Private App Subnet AZ2
+Select existing security group : Webserver Security group
+
+***Click Advanced details and scrol down to USER DATA***
+PASTE THIS COMMAND IN IT.
+/*  #!/bin/bash
+yum update -y
+sudo yum install -y httpd httpd-tools mod_ssl
+sudo systemctl enable httpd 
+sudo systemctl start httpd
+sudo amazon-linux-extras enable php7.4
+sudo yum clean metadata
+sudo yum install php php-common php-pear -y
+sudo yum install php-{cgi,curl,mbstring,gd,mysqlnd,gettext,json,xml,fpm,intl,zip} -y
+sudo rpm -Uvh https://dev.mysql.com/get/mysql57-community-release-el7-11.noarch.rpm
+sudo rpm --import https://repo.mysql.com/RPM-GPG-KEY-mysql-2022
+sudo yum install mysql-community-server -y
+sudo systemctl enable mysqld
+sudo systemctl start mysqld
+echo "fs-0760d22a2b943eaa8.efs.us-east-1.amazonaws.com:/ /var/www/html nfs4 nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2 0 0" >> /etc/fstab
+mount -a
+chown apache:apache -R /var/www/html
+sudo service httpd restart
+*/
+
+Then click Launch Instance.
+
+
+*** CREATING TARGET GROUP***
+Click target group 
+Click create target group
+Choose a target type : Instances
+Target group name : Dev-TG
+Protocol
+Port : 80
+IP address type : IPv4
+VPC : select your VPC
+***toggle Advanced health check settings***
+Success codes : 200,301,302
+
+Then click Next
+Register targets
+Available instances (2/3) : select Webserver AZ1 and Webserver AZ2
+Then click Include as Pending Bellow
+Then Click Create Target group
+
+***CREATE APPLICATION LOAD BALANCER***
+
+Click load BALANCER
+click Create Load BALANCER
+Load balancer types : Application Load Balancer
+Load balancer name : Dev-ALB
+Scheme: Internet-facing
+IP address type : IPv4
+VPC : select your VPC
+Mappings: us-east-1a (use1-az1) : Public Subnet AZ1
+          us-east-1b (use1-az2) : Public Subnet AZ2
+Security groups : ALB Security group
+ListenerHTTP:80
+Forword to : Dev-TG
+
+Then click Create Application load balancer
+
+***LAUNCH EC2 INSTANCE IN THE PUBLIC SUBNET***
+
+Click launch instance
+Name: BASTION HOST
+Quick start : Amazon Linux
+Amazon Machine Image (AMI) : Amazon Linux 2023 AMI 
+Instance type : t2.micro
+VPC : select your VPC
+Key pair: select your keypair
+Subnet : Public Subnet AZ1
+Select existing security group : SSH Security group
+
+
